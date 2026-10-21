@@ -1,0 +1,178 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Page character encoding -->
+    <meta charset="UTF-8">
+
+    <!-- Responsive design for mobile and desktop -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Website title -->
+    <title>Age Calculator | Calculate Your Age</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS file link -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Main page container -->
+    <main class="main-container">
+
+        <!-- Age calculator card -->
+        <div class="calculator-card">
+
+            <!-- Decorative top icon -->
+            <div class="icon-box">
+                <span>🎂</span>
+            </div>
+
+            <!-- Main heading -->
+            <h1>Age Calculator</h1>
+
+            <!-- Subtitle -->
+            <p class="subtitle">
+                Discover your exact age in years, months and days.
+            </p>
+
+            <!-- Date of birth label -->
+            <label for="dob">Date of Birth</label>
+
+            <!-- Date input -->
+            <input type="date" id="dob">
+
+            <!-- Calculate button -->
+            <button type="button" id="calculateBtn" onclick="calculateAge()">
+                Calculate My Age
+                <span>→</span>
+            </button>
+
+            <!-- Result message appears here -->
+            <div id="result" class="result-box" aria-live="polite">
+                <span class="result-icon">✨</span>
+                <p>Your age result will appear here.</p>
+            </div>
+
+            <!-- Footer note -->
+            <p class="footer-note">
+                Made with ❤️ to calculate your age
+            </p>
+
+        </div>
+
+    </main>
+
+    <!-- JavaScript code -->
+    <script>
+
+        // Calculate age when the button is clicked
+        function calculateAge() {
+
+            // Get date of birth and result elements
+            const dobInput = document.getElementById("dob");
+            const result = document.getElementById("result");
+
+            // Read the selected date
+            const dobValue = dobInput.value;
+
+            // Get today's date
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Check whether a date has been selected
+            if (dobValue === "") {
+                showMessage("Please select your date of birth!", "error");
+                return;
+            }
+
+            // Convert selected date into a Date object
+            const dob = new Date(dobValue + "T00:00:00");
+
+            // Prevent future dates
+            if (dob > today) {
+                showMessage("Date of birth cannot be in the future!", "error");
+                return;
+            }
+
+            // Calculate initial difference
+            let years = today.getFullYear() - dob.getFullYear();
+            let months = today.getMonth() - dob.getMonth();
+            let days = today.getDate() - dob.getDate();
+
+            // Adjust days when the current day is earlier
+            if (days < 0) {
+
+                // Move to the last day of the previous month
+                const previousMonthDays = new Date(
+                    today.getFullYear(),
+                    today.getMonth(),
+                    0
+                ).getDate();
+
+                days += previousMonthDays;
+                months--;
+            }
+
+            // Adjust months when the current month is earlier
+            if (months < 0) {
+                months += 12;
+                years--;
+            }
+
+            // Display the calculated age
+            result.className = "result-box success";
+
+            result.innerHTML = `
+                <h3>🎉 Your Age Is</h3>
+
+                <div class="age-result">
+
+                    <div class="age-item">
+                        <span class="age-number">${years}</span>
+                        <span class="age-label">Years</span>
+                    </div>
+
+                    <div class="age-item">
+                        <span class="age-number">${months}</span>
+                        <span class="age-label">Months</span>
+                    </div>
+
+                    <div class="age-item">
+                        <span class="age-number">${days}</span>
+                        <span class="age-label">Days</span>
+                    </div>
+
+                </div>
+            `;
+        }
+
+        // Display validation or error messages
+        function showMessage(message, type) {
+
+            const result = document.getElementById("result");
+
+            result.className = "result-box " + type;
+
+            result.innerHTML = `
+                <p>${message}</p>
+            `;
+        }
+
+        // Do not allow selecting a future date
+        document.getElementById("dob").max =
+            new Date().toLocaleDateString("en-CA");
+
+    </script>
+
+</body>
+
+</html>
+```
